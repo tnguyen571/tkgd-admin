@@ -1,0 +1,123 @@
+// .element{
+//     height: 100vh; /* For 100% screen height */
+//     width:  100%; /* For 100% screen width */
+// }
+$em05: 0.5em;
+
+.flex {
+    display: flex;
+}
+
+.flex-end {
+    margin-left: auto;
+}
+
+.remove-icon {
+    cursor: pointer;
+}
+
+.flex-start {
+    margin-right: auto;
+}
+
+.flex-center {
+    margin: auto;
+}
+
+.margin-top-30 {
+    margin-top: 30px;
+}
+
+.margin-top-10 {
+    margin-top: 10px;
+}
+
+.color-span-debt {
+    color: $redSpan;
+}
+
+.margin-auto {
+    margin: auto;
+}
+
+.border-less {
+    td, th {
+        border: none;
+    }
+}
+
+.red-color {
+    color: $red;
+}
+
+.blue-color {
+    // color: $blue;
+    color: blue;
+}
+
+.border-table {
+    border: 0.1em solid #c4c9ce;
+}
+
+.green-color {
+    color: $green;
+}
+
+.margin-icon {
+    margin-left: $em05;
+}
+
+.point-action {
+    cursor: pointer;
+}
+
+.title-management {
+    padding-left: 0 !important;
+}
+
+.animation-hover {
+    transition: all 0.2s ease-in-out;
+}
+
+.animation-hover:hover {
+    transform: scale(1.2);
+    transition: all .35s ease-in-out;
+}
+
+
+.popup-footer {
+    border-top: solid 1px darkgrey;
+  
+    button {
+      margin-left: 15px;
+    }
+}
+
+.remove-padding {
+    padding: 0px !important;
+}
+
+.td-width {
+    width: 50px;
+}
+
+.header-table-tile {
+    background-color: #373c50;// $blue;
+    color: #e9e8f3;
+    font-size: 1.25rem;
+}
+
+.delete-icon {
+    color: $red;
+    cursor: pointer;
+}
+
+.edit-icon {
+    color: $aqua;
+    cursor: pointer;
+}
+
+.undo-icon {
+    color: $green;
+    cursor: pointer;
+}
