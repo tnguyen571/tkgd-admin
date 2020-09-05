@@ -1,13 +1,15 @@
 {
   "name": "thecoffee",
   "version": "0.1.0",
+  "homepage": "https://tnguyen571.github.io/tkgd-admin/",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "deploy": "vue-cli-service s3-deploy",
-    "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/translation/**/*.json'"
+    "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/translation/**/*.json'",
+    "predeploy": "yarn build",
+    "deploy": "gh-pages -d build"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.26",
@@ -30,6 +32,7 @@
     "vue-bootstrap-datetimepicker": "^5.0.1",
     "vue-burger-menu": "^2.0.5",
     "vue-cli-plugin-s3-deploy": "3.0.0",
+    "vue-gh-pages": "^1.19.1",
     "vue-i18n": "^8.0.0",
     "vue-inputmask": "^0.2.1",
     "vue-loader": "^15.8.3",

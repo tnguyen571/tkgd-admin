@@ -127,18 +127,19 @@ export default {
     },
   },
   methods: {
-    searchByName(val) {
-      this.isLoading = true;
-      this.fetchProductsByName(val).then(
+    fetchByName (name) {
+      this.fetchProductsByName(name, true).then(
         (res) => {
-          this.isLoading = false;
-          this.updateValueWhenFetchData(res.data);
-          // eslint-disable-next-line handle-callback-err
+          this.updateValueWhenFetchData(res.data)
         },
+        // eslint-disable-next-line handle-callback-err
         (err) => {
-          this.isLoading = false;
+          this.isLoading = false
         }
-      );
+      )
+    },
+    searchByName(val) {
+      this.$helper.callOneTimes(this.fetchByName, 500, val)
     },
     changeSelect(item) {
       this.categoryFilterId = item.id;
