@@ -1,7 +1,7 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "8d95fc8bc8cac35dd561",
-    "url": "/tkgd-admin/css/app.e82c703b.css"
+    "revision": "7615ba4b150f28be9a62",
+    "url": "/tkgd-admin/css/app.0f775112.css"
   },
   {
     "revision": "49423f3c6028e56b8061",
@@ -68,7 +68,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/tkgd-admin/img/fa-solid-900.7a5de9b0.svg"
   },
   {
-    "revision": "3ab92fe69ab1c2144f6c440d0fd72d2e",
+    "revision": "8aa635d13a150b7fc63c0bfdd395373d",
     "url": "/tkgd-admin/index.html"
   },
   {
@@ -76,8 +76,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/tkgd-admin/js/about.574102ba.js"
   },
   {
-    "revision": "8d95fc8bc8cac35dd561",
-    "url": "/tkgd-admin/js/app.099f7f3d.js"
+    "revision": "7615ba4b150f28be9a62",
+    "url": "/tkgd-admin/js/app.3594bef2.js"
   },
   {
     "revision": "49423f3c6028e56b8061",
