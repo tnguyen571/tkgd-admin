@@ -2,7 +2,7 @@ module.exports = {
   'transpileDependencies': [
     'vuetify'
   ],
-  publicPath: process.env.NODE_ENV === 'production' ? '/tkgd-admin/' : '/',
+  publicPath: '/tkgd-admin/',
   lintOnSave: false,
 
   pluginOptions: {
