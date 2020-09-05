@@ -130,7 +130,7 @@ export default {
   color: white;
   font-size: 2em;
   font-family: initial;
-  padding: 0;
+  padding: 0 !important;
   margin-bottom: 1.4rem;
 }
 
@@ -229,9 +229,9 @@ export default {
   z-index: 1000; /* Stay on top */
   top: 0;
   left: 0;
-  background-color: #373c50; /* Black*/
+  background-color: #373c50 !important; /* Black*/
   overflow-x: hidden; /* Disable horizontal scroll */
-  padding-top: 20px; /* Place content 60px from the top */
+  padding-top: 20px !important; /* Place content 60px from the top */
   transition: 0.5s; /*0.5 second transition effect to slide in the sidenav*/
 }
 

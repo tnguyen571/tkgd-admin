@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/tkgd-admin/precache-manifest.9285fb406d69ec0bbffb3dce5588400c.js"
+  "/tkgd-admin/precache-manifest.64eb2b56358c3aa44c55930af4759e89.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "thecoffee"});
