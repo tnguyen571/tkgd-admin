@@ -1,25 +1,29 @@
 <template>
   <div class="product-management">
     <loading :active.sync="isLoading" :is-full-page="false" />
-    <div class="row">
-      <div class="nav-product row col-sm-12 flex">
-        <div class="col-sm-6 title-management">
+    <div class="row" style="margin-top: 5rem;">
+      <div class="nav-product row col-sm-12 flex remove-padding margin-auto">
+        <!-- <div class="col-sm-6 title-management">
           <h2 class="flex">{{$t('previewProduct')}}</h2>
-        </div>
-        <div class="col-sm-3 flex-end remove-padding">
-            <multiselect
-                  v-model="selected"
-                  :options="options"
-                  label="value"
-                  track-by="id"
-                  :selectLabel="$t('pressEnterOrClick')"
-                  :deselectLabel="$t('pressEnterToRemove')"
-                  :placeholder="$t('allProduct')"
-                  :selectedLabel="$t('selected')"
-                  @select="changeSelect"
-                  @remove="removeSelect"
-                />
-        </div>
+        </div>-->
+        <search-input
+          :placeholder="'Tìm kiếm'"
+          @searchValue="searchByName"
+          class="col-sm-4 remove-padding"
+        />
+        <b-dropdown variant="outline-secondary" class="flex-end" :right="true">
+          <template slot="button-content">
+            <!-- <i class="fas fa-cocktail py-1"></i> -->
+            <span>{{categoryFilter}}</span>
+          </template>
+          <template v-for="item in options">
+            <b-dropdown-item
+              @click="changeSelect(item)"
+              :key="item.id"
+              :active="categoryFilterId === item.id"
+            >{{item.value}}</b-dropdown-item>
+          </template>
+        </b-dropdown>
         <div class="lst-product">
           <template v-for="item in displayData">
             <product
@@ -37,13 +41,7 @@
     </div>
     <div class="row pagination-custom">
       <div class="mt-3">
-        <b-pagination
-          v-model="currentPage"
-          pills
-          :total-rows="rows"
-          :per-page="perPage"
-          size="lg"
-        />
+        <b-pagination v-model="currentPage" pills :total-rows="rows" :per-page="perPage" size="md" />
       </div>
     </div>
     <product-popup
@@ -52,168 +50,210 @@
       :productId="productId"
       @doneUpdate="reloadData"
     />
-    <product-delete :id="productId" :idPopup="idProductPopupDelete" :name="productName" @remove="deleteProduct">
-      <label style="color: #ef3a3a">{{ $t('doYouWanToDeleteProductSelected') }} <br> {{`"${this.productName}"?`}}</label>
+    <product-delete
+      :id="productId"
+      :idPopup="idProductPopupDelete"
+      :name="productName"
+      @remove="deleteProduct"
+    >
+      <label style="color: #ef3a3a">
+        {{ $t('doYouWanToDeleteProductSelected') }}
+        <br />
+        {{`"${this.productName}"?`}}
+      </label>
     </product-delete>
   </div>
 </template>
 <script>
-import Product from './Form/Product'
-import CategoryApi from './../mixins/CategoryApi'
-import ProductApi from '../mixins/ProductApi'
-import ProductPopup from './Popup/ProductAddEdit'
-import ProductDelete from './Popup/ProductConfirmDelete'
-import url from '../mixins/url'
-import Multiselect from 'vue-multiselect'
+import Product from "./Form/Product";
+import CategoryApi from "./../mixins/CategoryApi";
+import ProductApi from "../mixins/ProductApi";
+import ProductPopup from "./Popup/ProductAddEdit";
+import ProductDelete from "./Popup/ProductConfirmDelete";
+import url from "../mixins/url";
+import Multiselect from "vue-multiselect";
 export default {
   components: { Product, ProductPopup, ProductDelete, Multiselect },
   mixins: [ProductApi, CategoryApi],
-  data () {
+  data() {
     return {
+      categoryFilterId: 0,
+      categoryFilter: this.$t("all"),
       currentPage: 1,
       isLoading: false,
       rows: 100,
-      productName: '',
+      productName: "",
       perPage: 8,
       selected: null,
-      idProductPopup: 'product-popup-add-edit',
-      idProductPopupDelete: 'product-popup-delete',
+      idProductPopup: "product-popup-add-edit",
+      idProductPopupDelete: "product-popup-delete",
       users: [],
       originalUsers: [],
       isEdit: false,
       productId: -1,
       data: [],
-      options: []
-    }
+      options: [],
+    };
   },
-  created () {
-    window.addEventListener('scroll', this.handleScroll)
-    this.getAllCategory()
-    this.getAllProduct()
+  created() {
+    window.addEventListener("scroll", this.handleScroll);
+    this.$store.commit("updateHeaderTitle", "previewProduct");
+    this.getAllCategory();
+    this.getAllProduct();
   },
-  destroyed () {
-    window.removeEventListener('scroll', this.handleScroll)
+  destroyed() {
+    window.removeEventListener("scroll", this.handleScroll);
   },
   computed: {
-    displayData () {
-      let lstProduct = Object.assign([], this.data)
-      let from = this.currentPage === 1 ? 0 : (this.currentPage - 1) * this.perPage
-      let to = (this.currentPage * this.perPage) > this.data ? this.data : (this.currentPage * this.perPage)
+    displayData() {
+      let lstProduct = Object.assign([], this.data);
+      let from =
+        this.currentPage === 1 ? 0 : (this.currentPage - 1) * this.perPage;
+      let to =
+        this.currentPage * this.perPage > this.data
+          ? this.data
+          : this.currentPage * this.perPage;
       let obj = {
-        from, to, currentt: this.currentPage, perPage: this.perPage
-      }
-      console.log(obj)
-      return lstProduct.slice(from, to)
+        from,
+        to,
+        currentt: this.currentPage,
+        perPage: this.perPage,
+      };
+      console.log(obj);
+      return lstProduct.slice(from, to);
     },
-    search () {
-      return this.$store.state.search.search
-    }
+    search() {
+      return this.$store.state.search.search;
+    },
   },
   methods: {
-    searchByName (val) {
-      this.isLoading = true
-      this.fetchProductsByName(val).then(res => {
-        this.isLoading = false
-        this.updateValueWhenFetchData(res.data)
-      // eslint-disable-next-line handle-callback-err
-      }, err => { this.isLoading = false })
+    searchByName(val) {
+      this.isLoading = true;
+      this.fetchProductsByName(val).then(
+        (res) => {
+          this.isLoading = false;
+          this.updateValueWhenFetchData(res.data);
+          // eslint-disable-next-line handle-callback-err
+        },
+        (err) => {
+          this.isLoading = false;
+        }
+      );
     },
-    changeSelect (event) {
-      this.fetchProductByCategoryId(event.id).then(res => {
-        this.updateValueWhenFetchData(res.data)
-      })
+    changeSelect(item) {
+      this.categoryFilterId = item.id;
+      this.categoryFilter = item.value;
+      if (item.id === 0) this.getAllProduct();
+      else
+        this.fetchProductByCategoryId(item.id).then((res) => {
+          this.updateValueWhenFetchData(res.data);
+        });
     },
-    removeSelect () {
-      this.getAllProduct()
+    removeSelect() {
+      this.getAllProduct();
     },
-    getAllCategory () {
+    getAllCategory() {
       this.fetchCategories().then((res) => {
-        let data = res.data
-        this.$set(this, 'options', data)
-      })
+        let data = [{ id: 0, value: "Tất cả" }];
+        data = data.concat(res.data);
+        this.$set(this, "options", data);
+      });
     },
-    getAllProduct () {
+    getAllProduct() {
       // this.isLoading = true
-      this.fetchProducts().then((res) => {
-        // this.isLoading = false
-        this.updateValueWhenFetchData(res.data)
-      // eslint-disable-next-line handle-callback-err
-      }, err => {
-        this.isLoading = false
-      })
+      this.fetchProducts().then(
+        (res) => {
+          // this.isLoading = false
+          this.updateValueWhenFetchData(res.data);
+          // eslint-disable-next-line handle-callback-err
+        },
+        (err) => {
+          this.isLoading = false;
+        }
+      );
     },
-    updateValueWhenFetchData (data) {
-      let convertData = this.convertData(data)
-      this.$set(this, 'data', convertData)
-      this.$set(this, 'rows', convertData.length)
+    updateValueWhenFetchData(data) {
+      let convertData = this.convertData(data);
+      this.$set(this, "data", convertData);
+      this.$set(this, "rows", convertData.length);
     },
-    convertData (data) {
-      let result = data.map(item => {
-        var obj = Object.assign({}, item)
+    convertData(data) {
+      let result = data.map((item) => {
+        var obj = Object.assign({}, item);
 
-        obj.id = parseInt(obj.id)
-        obj.price = parseInt(obj.price)
-        obj.image = `${url.basicUrl}/${obj.image}`
-        return obj
-      })
-      return result
+        obj.id = parseInt(obj.id);
+        obj.price = parseInt(obj.price);
+        obj.image = `${url.basicUrl}/${obj.image}`;
+        return obj;
+      });
+      return result;
     },
-    loadDataWithPage () {
-      let lstProduct = Object.assign([], this.data)
-      let from = this.currentPage === 1 ? 0 : (this.currentPage - 1) * this.perPage
-      let to = (this.currentPage * this.perPage) > this.data ? this.data : (this.currentPage * this.perPage)
+    loadDataWithPage() {
+      let lstProduct = Object.assign([], this.data);
+      let from =
+        this.currentPage === 1 ? 0 : (this.currentPage - 1) * this.perPage;
+      let to =
+        this.currentPage * this.perPage > this.data
+          ? this.data
+          : this.currentPage * this.perPage;
       let obj = {
-        from, to, currentt: this.currentPage, perPage: this.perPage
-      }
-      console.log(obj)
-      this.displayData = lstProduct.slice(4, 6)
+        from,
+        to,
+        currentt: this.currentPage,
+        perPage: this.perPage,
+      };
+      console.log(obj);
+      this.displayData = lstProduct.slice(4, 6);
     },
-    showDeletePopup (value) {
-      console.log('delete')
-      console.log(value)
-      this.$set(this, 'productId', parseInt(value.id))
-      this.$set(this, 'productName', value.name)
-      this.$bvModal.show(this.idProductPopupDelete)
+    showDeletePopup(value) {
+      console.log("delete");
+      console.log(value);
+      this.$set(this, "productId", parseInt(value.id));
+      this.$set(this, "productName", value.name);
+      this.$bvModal.show(this.idProductPopupDelete);
     },
-    deleteProduct (value) {
-      console.log(value.id)
-      this.removeProduct(value.id).then(res => {
-        this.$helper.toast.success(this, this.$t('deleteSuccess'))
-        this.$bvModal.hide(this.idProductPopupDelete)
-        this.reloadData()
-      // eslint-disable-next-line handle-callback-err
-      }, err => {
-        this.$helper.toast.error(this, this.$t('deleteUnSuccess'))
-      })
+    deleteProduct(value) {
+      console.log(value.id);
+      this.removeProduct(value.id).then(
+        (res) => {
+          this.$helper.toast.success(this, this.$t("deleteSuccess"));
+          this.$bvModal.hide(this.idProductPopupDelete);
+          this.reloadData();
+          // eslint-disable-next-line handle-callback-err
+        },
+        (err) => {
+          this.$helper.toast.error(this, this.$t("deleteUnSuccess"));
+        }
+      );
     },
-    editProduct (value) {
-      this.$set(this, 'isEdit', true)
-      console.log(value)
-      this.$set(this, 'productId', parseInt(value))
-      this.$bvModal.show(this.idProductPopup)
+    editProduct(value) {
+      this.$set(this, "isEdit", true);
+      console.log(value);
+      this.$set(this, "productId", parseInt(value));
+      this.$bvModal.show(this.idProductPopup);
     },
-    handleScroll () {},
-    reloadData () {
-      this.getAllProduct()
-      this.currentPage = 1
-      this.productId = 0
+    handleScroll() {},
+    reloadData() {
+      this.getAllProduct();
+      this.currentPage = 1;
+      this.productId = 0;
     },
-    addProduct () {
-      this.$set(this, 'productId', 0)
-      this.$set(this, 'isEdit', false)
-      this.$bvModal.show(this.idProductPopup)
-    }
+    addProduct() {
+      this.$set(this, "productId", 0);
+      this.$set(this, "isEdit", false);
+      this.$bvModal.show(this.idProductPopup);
+    },
   },
   watch: {
-    search (val, old) {
-      if (val === '') {
-        this.$helper.callOneTimes(this.reloadData, 1000)
+    search(val, old) {
+      if (val === "") {
+        this.$helper.callOneTimes(this.reloadData, 1000);
       } else {
-        this.$helper.callOneTimes(this.searchByName, 1000, val)
+        this.$helper.callOneTimes(this.searchByName, 1000, val);
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 <style lang="scss">
 .lst-product {
@@ -252,7 +292,7 @@ export default {
 
   a:hover {
     transform: scale(1.2);
-    transition: all .35s ease-in-out;
+    transition: all 0.35s ease-in-out;
   }
 }
 </style>

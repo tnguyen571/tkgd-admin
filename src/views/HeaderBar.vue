@@ -11,7 +11,7 @@
     >
     <b-link class="navbar-brand flex-start brand-name" :to="{name: 'home'}" >{{brandName}}</b-link>
     <template v-for="item in menu" >
-      <b-link :to="item.navigate" :title="item.title" :class="item.class" :key="item.id">{{item.display}}</b-link>
+      <b-link :to="item.navigate" :title="item.title" :active="currentLink == item.id" :class="item.class" :key="item.id" @click="switchLink(item.id)">{{item.display}}</b-link>
     </template>
       <!-- <b-link
         class="navbar-brand flex-start brand-name"
@@ -23,7 +23,7 @@
         <b-link :to="{name: 'preview'}" :title="$t('preview')">{{$t('preview')}}</b-link> -->
     </Slide>
     <nav class="navbar navbar-light bg-light flex saving-users">
-      <div class="col-sm-3 title-management">
+      <div class="col-sm-6 title-management">
           <h2 class="flex">{{$t(title)}}</h2>
         </div>
       <!-- <search-input
@@ -44,7 +44,7 @@ export default {
     return {
       showProfile: false,
       brandName: 'TheCoffee',
-      currentLink: location.href,
+      currentLink: 1,
       menu: [
         // {
         //   id: 0,
@@ -107,11 +107,15 @@ export default {
     },
     signOut () {
       loginHanlder.signOutUser()
+    },
+    switchLink (id) {
+      this.currentLink = id
     }
   }
 }
 </script>
 <style lang="scss">
+@import "src/scss/color.scss";
 #nav-bar {
   padding: 0px;
   padding-left: 20px;
@@ -248,8 +252,9 @@ export default {
   a:hover {
     border-left: 3px solid red;
   }
-  a:active {
-    border-left: 3px solid red;
+  a.active {
+   // border-left: 3px solid rgb(126, 233, 183);
+    border-left: 3px solid $patelGreen;
   }
 }
 .bm-item-list > * > span {

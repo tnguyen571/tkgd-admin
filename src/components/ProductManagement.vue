@@ -373,6 +373,9 @@ export default {
   // }
 }
 
+.dropdown-item.active {
+    background-color: #4ddba7 !important;
+}
 .table-function-style{
   margin-top: 2.5rem;
 }
