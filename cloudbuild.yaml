@@ -4,5 +4,5 @@ steps:
       args: ["install"]
     - name: node:10.15.1
       entrypoint: yarn
-      args: ["serve", "build"]
+      args: ["build"]
     timeout: "1600s"
