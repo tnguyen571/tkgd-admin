@@ -1,4 +1,4 @@
-var callUrl = 'http://localhost:3001'
+var callUrl = 'https://thecoffee-backend.df.r.appspot.com'
 export default {
   basicUrl: callUrl,
   socketUrl: 'socket/',

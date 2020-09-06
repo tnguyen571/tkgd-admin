@@ -2,7 +2,7 @@ module.exports = {
   'transpileDependencies': [
     'vuetify'
   ],
-  publicPath: '/tkgd-admin/',
+  // publicPath: '/tkgd-admin/',
   lintOnSave: false,
 
   pluginOptions: {

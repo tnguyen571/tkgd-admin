@@ -1,7 +1,6 @@
 {
   "name": "thecoffee",
   "version": "0.1.0",
-  "homepage": "https://tnguyen571.github.io/tkgd-admin/",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
